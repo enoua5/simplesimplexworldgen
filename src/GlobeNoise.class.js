@@ -17,11 +17,11 @@ class GlobeNoise
     return this.generator.getValue3D(x,y,z,octaves)
   }
   
-  static pix_to_coord(x, y)
+  static pix_to_coord(x, y, w = 200, h = 100, r = 0)
   {
     return {
-      lon: (2*Math.PI*x)/canvas.width + rot,
-      lat:((Math.PI*y)/canvas.height)-Math.PI/2
+      lon: (2*Math.PI*x)/w + r,
+      lat:((Math.PI*y)/h)-Math.PI/2
     };
   }
 }
