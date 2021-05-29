@@ -8,9 +8,9 @@ class GlobeNoise
   
   getValue(lat, lon, octaves=3)
   {
-    let x = Math.cos(lon) * Math.sin(lat);
-    let y = Math.sin(lon) * Math.sin(lat);
-    let z = Math.cos(lat)
+    let x = this.radius * Math.cos(lon) * Math.sin(lat);
+    let y = this.radius * Math.sin(lon) * Math.sin(lat);
+    let z = this.radius * Math.cos(lat)
     
     return this.generator.getValue3D(x,y,z,octaves);
   }

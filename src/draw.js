@@ -43,9 +43,9 @@ function draw(canvas, gens, settings)
       let coord = GlobeNoise.pix_to_coord(x, y, settings.width, settings.height);
       let lat = coord.lat;
       let lon = coord.lon
-      let height = gens.height.getValue(lat, lon, settings.octaves)
-      let heat = gens.heat.getValue(lat, lon, settings.octaves);
-      let humidity = gens.humidity.getValue(lat, lon, settings.octaves);
+      let height = gens.height.getValue(lat, lon, settings.height_octaves)
+      let heat = gens.heat.getValue(lat, lon, settings.heat_octaves);
+      let humidity = gens.humidity.getValue(lat, lon, settings.humidity_octaves);
       
       let color = getColor(height, heat, humidity, settings);
       

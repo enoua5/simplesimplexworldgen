@@ -22,7 +22,9 @@
       var settings = {
         width: 200,
         height: 100,
-        octaves: 5
+        height_octaves: 5,
+        heat_octaves: 5,
+        humidity_octaves: 5,
       };
     
       function onload()
@@ -37,11 +39,90 @@
         
         draw(canvas, gens, settings);
       }
+      
+      function redraw()
+      {
+        let canvas = document.getElementById("canvas");
+        canvas.height = settings.height;
+        canvas.width = settings.width;
+        draw(canvas, gens, settings)
+      }
+      
+      // setting change handlers
+      function changeSize(height)
+      {
+        settings.height=parseInt(height)
+        settings.width = settings.height*2;
+      }
+      
+      function changeSeed(which, text)
+      {
+        let generator = gens[which].generator;
+        generator.seed = text.hashCode();
+      }
+      
+      function updateSetting(which, value)
+      {
+        settings[which] = value;
+      }
+      
+      function updateRadius(which, value)
+      {
+        gens[which].radius = value;
+      }
     </script>
   </head>
   <body onload="onload()">
     <canvas id="canvas">
       
     </canvas>
+    
+    <br/>
+    <button onclick="redraw()">Redraw</button>
+    <br/>
+    
+    <label>Image height</label> <input type="number" min=5 max=1024 value=100 onchange="changeSize(this.value)"/>
+    <br/>
+    <small>Image width is 2*image height. Work with a small image before increasing size for export.</small>
+    <br/>
+    <br/>
+    
+    <details>
+      <summary>Height settings</summary>
+      <label>Seed</label> <input type="text" onchange="changeSeed('height', this.value)"/>
+      <br/>
+      <label>Octaves</label> <input type="number" min=1 max=8 value=5 onchange="updateSetting('height_octaves', parseInt(this.value))"/>
+      <br/>
+      <label>Octaves</label> <input type="number" min=1 max=8 value=5 onchange="updateSetting('height_octaves', parseInt(this.value))"/>
+      <br/>
+      <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateRadius('height', parseFloat(this.value))"/>
+      <br/>
+      <small>Note: higher sampling radius creates smaller biomes, while smaller radius creates larger biomes</small>
+      
+    </details>
+    <br/>
+    
+    <details>
+      <summary>Heat settings</summary>
+      <label>Seed</label> <input type="text" onchange="changeSeed('heat', this.value)"/>
+      <br/>
+      <label>Octaves</label> <input type="number" min=1 max=8 value=5 onchange="updateSetting('heat_octaves', parseInt(this.value))"/>
+      <br/>
+      <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateRadius('heat', parseFloat(this.value))"/>
+      <br/>
+      <small>Note: higher sampling radius creates smaller biomes, while smaller radius creates larger biomes</small>
+    </details>
+    <br/>
+    
+    <details>
+      <summary>Humidity settings</summary>
+      <label>Seed</label> <input type="text" onchange="changeSeed('humidity', this.value)"/>
+      <br/>
+      <label>Octaves</label> <input type="number" min=1 max=8 value=5 onchange="updateSetting('humidity_octaves', parseInt(this.value))"/>
+      <br/>
+      <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateRadius('humidity', parseFloat(this.value))"/>
+      <br/>
+      <small>Note: higher sampling radius creates smaller biomes, while smaller radius creates larger biomes</small>
+    </details>
   </body>
 </html>
