@@ -25,6 +25,10 @@
         height_octaves: 5,
         heat_octaves: 5,
         humidity_octaves: 5,
+        ice: 10,
+        iceStrength: 1,
+        iceAltitude: 0.5,
+        iceAltitudeStrength: 1
       };
     
       function onload()
@@ -111,6 +115,14 @@
       <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateRadius('heat', parseFloat(this.value))"/>
       <br/>
       <small>Note: higher sampling radius creates smaller biomes, while smaller radius creates larger biomes</small>
+      <br/>
+      <label>Glacier %</label> <input type="number" min=0 max=100 value=10 onchange="updateSetting('ice', parseInt(this.value))"/>
+      <br/>
+      <label>Glacier strength</label> <input type="number" min=0 max=2 step=0.1 value=1 onchange="updateSetting('iceStrength', parseFloat(this.value))"/>
+      <br/>
+      <label>Mountain ice altitude</label> <input type="number" min=-2 max=2 step=0.1 value=0.5 onchange="updateSetting('iceAltitude', parseFloat(this.value))"/>
+      <br/>
+      <label>Mountain ice strength</label> <input type="number" min=0 max=2 step=0.1 value=1 onchange="updateSetting('iceAltitudeStrength', parseFloat(this.value))"/>
     </details>
     <br/>
     
