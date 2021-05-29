@@ -41,12 +41,42 @@
         beach_height: 0.1,
         mountain_base: 0.6
       };
+      
+      var pals = {
+        ocean: createNDArray([256, 256]),
+        beach: createNDArray([256, 256]),
+        plains: createNDArray([256, 256]),
+        mountains: createNDArray([256, 256])
+      };
     
       function onload()
       {
         let canvas = document.getElementById("canvas");
         canvas.height = settings.height;
         canvas.width = settings.width;
+        
+        // fill out the pals
+        for(i of ["ocean", "beach", "plains", "mountains"])
+        {
+          let ctx = colorPicker.getContext('2d')
+          ctx.drawImage(document.getElementById(i+"_map"), 0, 0, 256, 256);
+          
+          let c = ctx.getImageData(0, 0, 256, 256).data;
+          
+          let n = 0;
+          for(let y = 0; y < 256; y++)
+          {
+            for(let x = 0; x < 256; x++)
+            {
+              let r = c[n++]; 
+              let g = c[n++];
+              let b = c[n++];
+              n++; // alpha
+              pals[i][x][y] = {r,g,b};
+            }
+          }
+          
+        }
         
         gens.height.generator.seed = refit(Math.random(), 0, 1, 0, 2**16, true, true);
         gens.heat.generator.seed = refit(Math.random(), 0, 1, 0, 2**16, true, true);
