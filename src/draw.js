@@ -68,15 +68,11 @@ function draw(canvas, gens, settings)
       
       
       let heat = gens.heat.getValue(lat, lon, settings.heat_octaves) + settings.heat_bias;
-      // 0 = at pole, 1 = at equator
-      let distanceToPole = 1-(2/h)*Math.abs(y-h/2);
-      // if in icecap range...  
-      if(distanceToPole < settings.ice/100)
-      {
-        // refit to a pole-to-edge-of-ice
-        let distanceIntoIcecap = 1-refit(distanceToPole, 0, settings.ice/100, 0, 1);
-        heat -= distanceIntoIcecap * settings.iceStrength;
-      }
+      // -1 = at pole, 0 = 45th parallel, 1 = at equator
+      let latHeatMult = Math.cos(2*lat);
+      heat -= latHeatMult*settings.latHeat;
+      
+      
       if(height > settings.iceAltitude)
       {
         heat -= settings.iceAltitudeStrength;
