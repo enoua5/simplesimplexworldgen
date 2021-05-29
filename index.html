@@ -32,7 +32,7 @@
         height_bias: 0,
         heat_bias: 0,
         humidity_bias: 0,
-        ice: 10,
+        ice: 30,
         iceStrength: 0.5,
         iceAltitude: 0.5,
         iceAltitudeStrength: 0.5,
@@ -169,7 +169,7 @@
       <br/>
       <small>Note: higher sampling radius creates smaller biomes, while smaller radius creates larger biomes</small>
       <br/>
-      <label>Glacier %</label> <input type="number" min=0 max=100 value=10 onchange="updateSetting('ice', parseInt(this.value))"/>
+      <label>Glacier %</label> <input type="number" min=0 max=100 value=30 onchange="updateSetting('ice', parseInt(this.value))"/>
       <br/>
       <label>Glacier strength</label> <input type="number" min=0 max=2 step=0.1 value=1 onchange="updateSetting('iceStrength', parseFloat(this.value))"/>
       <br/>
