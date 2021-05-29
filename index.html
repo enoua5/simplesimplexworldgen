@@ -11,15 +11,37 @@
     <script src="src/hash.js"></script>
     <script src="src/noise.js"></script>
     <script src="src/Simplex.class.js"></script>
+    <script src="src/draw.js"></script>
     
     <script>
+      var gens = {
+        height: new GlobeNoise(),
+        heat: new GlobeNoise(),
+        humidity: new GlobeNoise()
+      };
+      var settings = {
+        width: 200,
+        height: 100,
+        octaves: 5
+      };
+    
       function onload()
       {
-      
+        let canvas = document.getElementById("canvas");
+        canvas.height = settings.height;
+        canvas.width = settings.width;
+        
+        gens.height.generator.seed = refit(Math.random(), 0, 1, 0, 2**16, true, true);
+        gens.heat.generator.seed = refit(Math.random(), 0, 1, 0, 2**16, true, true);
+        gens.humidity.generator.seed = refit(Math.random(), 0, 1, 0, 2**16, true, true);
+        
+        draw(canvas, gens, settings);
       }
     </script>
   </head>
   <body onload="onload()">
-  
+    <canvas id="canvas">
+      
+    </canvas>
   </body>
 </html>

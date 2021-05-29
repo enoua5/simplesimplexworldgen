@@ -8,20 +8,19 @@ class GlobeNoise
   
   getValue(lat, lon, octaves=3)
   {
-    let ls=((lat-Math.PI/2)%Math.PI)-Math.PI/2;//Math.atan(Math.tan(lat));
+    let x = Math.cos(lon) * Math.sin(lat);
+    let y = Math.sin(lon) * Math.sin(lat);
+    let z = Math.cos(lat)
     
-    let x=this.radius * Math.cos(ls) * Math.cos(lon);
-    let y=this.radius * Math.cos(ls) * Math.sin(lon);
-    let z=this.radius * Math.sin(ls);
-    
-    return this.generator.getValue3D(x,y,z,octaves)
+    return this.generator.getValue3D(x,y,z,octaves);
   }
   
   static pix_to_coord(x, y, w = 200, h = 100, r = 0)
   {
+    // this shouldn't be correct, but aparantly it is?? 
     return {
-      lon: (2*Math.PI*x)/w + r,
-      lat:((Math.PI*y)/h)-Math.PI/2
+      lon: refit(x/2, 0, w/2, -Math.PI, Math.PI),
+      lat: refit(y/2, -h/2, h/2, -Math.PI, Math.PI)
     };
   }
 }
