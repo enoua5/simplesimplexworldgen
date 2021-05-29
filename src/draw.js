@@ -22,11 +22,28 @@ function refit(value, srcMin, srcMax, outMin, outMax, clamp = false, round = fal
 
 function getColor(height, heat, humidity, settings)
 {
-  height = refit(height, -1, 1, 0, 255, true, true);
+  let ctx = colorPicker.getContext('2d');
+  
+  let palette = "ocean_map";
+  if(height > settings.ocean_height)
+    palette = "beach_map";
+  if(height > settings.ocean_height + settings.beach_height)
+    palette = "plains_map";
+  if(height > settings.mountain_base)
+    palette = "mountains_map"
+  ctx.drawImage(document.getElementById(palette), 0, 0, 256, 256);
+  
   heat = refit(heat, -1, 1, 0, 255, true, true);
   humidity = refit(humidity, -1, 1, 0, 255, true, true);
+  let c = ctx.getImageData(humidity, heat, 1, 1).data;
   
-  return {red: heat, green: height, blue: humidity};
+  return {red: c[0], green: c[1], blue: c[2]};
+  
+//  height = refit(height, -1, 1, 0, 255, true, true);
+//  heat = refit(heat, -1, 1, 0, 255, true, true);
+//  humidity = refit(humidity, -1, 1, 0, 255, true, true);
+  
+//  return {red: heat, green: height, blue: humidity};
 }
 
 function draw(canvas, gens, settings)

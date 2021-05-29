@@ -14,6 +14,10 @@
     <script src="src/draw.js"></script>
     
     <script>
+      var colorPicker = document.createElement("canvas");
+      colorPicker.width = 256;
+      colorPicker.height = 256;
+      
       var gens = {
         height: new GlobeNoise(),
         heat: new GlobeNoise(),
@@ -31,7 +35,11 @@
         ice: 10,
         iceStrength: 0.5,
         iceAltitude: 0.5,
-        iceAltitudeStrength: 0.5
+        iceAltitudeStrength: 0.5,
+        
+        ocean_height: 0,
+        beach_height: 0.1,
+        mountain_base: 0.6
       };
     
       function onload()
@@ -52,6 +60,7 @@
         let canvas = document.getElementById("canvas");
         canvas.height = settings.height;
         canvas.width = settings.width;
+        document.getElementById("key").height = settings.height;
         draw(canvas, gens, settings)
       }
       
@@ -83,6 +92,8 @@
     <canvas id="canvas">
       
     </canvas>
+    <img id="key" src="img/key.png" height=100/>
+    
     
     <br/>
     <button onclick="redraw()">Redraw</button>
@@ -105,6 +116,13 @@
       <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateRadius('height', parseFloat(this.value))"/>
       <br/>
       <small>Note: higher sampling radius creates smaller biomes, while smaller radius creates larger biomes</small>
+      
+      <br/>
+      <label>Sea level</label> <imput type="range" min=-1 max=1 value=0 onchange="updateSetting('ocean_height', parseFloat(this.value))"/>
+      <br/>
+      <label>Beach length</label> <imput type="range" min=0 max=2 value=0.01 onchange="updateSetting('beach_height', parseFloat(this.value))"/>
+      <br/>
+      <label>Mountain base</label> <imput type="range" min=-1 max=1 value=0.6 onchange="updateSetting('mountain_base', parseFloat(this.value))"/>
       
     </details>
     <br/>
@@ -143,5 +161,22 @@
       <br/>
       <small>Note: higher sampling radius creates smaller biomes, while smaller radius creates larger biomes</small>
     </details>
+    <br/>
+    
+    <details>
+      <summary>Biome maps</summary>
+      <small>not currently settable, but maybe later...</small>
+      <br/>
+      <image id="ocean_map" src="img/ocean.png"/>
+      <image id="beach_map" src="img/beach.png"/>
+      <image id="plains_map" src="img/plains.png"/>
+      <image id="mountains_map" src="img/mountains.png"/>
+    </details>
+    <hr/>
+    <footer>
+      <p>&copy; enoua5 2021</p>
+      <p>Key is cropped from <a href="https://commons.wikimedia.org/wiki/File:Vegetation.png">https://commons.wikimedia.org/wiki/File:Vegetation.png</a>, author: Ville Koistinen, <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a></p>
+      <p>Open Simplex implementation: Stefan Gustavson, public domain</p>
+    </footer>
   </body>
 </html>
