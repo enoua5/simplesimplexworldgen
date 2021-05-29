@@ -75,8 +75,7 @@ function draw(canvas, gens, settings)
       {
         // refit to a pole-to-edge-of-ice
         let distanceIntoIcecap = 1-refit(distanceToPole, 0, settings.ice/100, 0, 1);
-        // no, I don't know why it's a plus
-        heat += distanceIntoIcecap * settings.iceStrength;
+        heat -= distanceIntoIcecap * settings.iceStrength;
       }
       if(height > settings.iceAltitude)
       {
