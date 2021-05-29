@@ -25,10 +25,13 @@
         height_octaves: 5,
         heat_octaves: 5,
         humidity_octaves: 5,
+        height_bias: 0,
+        heat_bias: 0,
+        humidity_bias: 0,
         ice: 10,
-        iceStrength: 1,
+        iceStrength: 0.5,
         iceAltitude: 0.5,
-        iceAltitudeStrength: 1
+        iceAltitudeStrength: 0.5
       };
     
       function onload()
@@ -97,7 +100,7 @@
       <br/>
       <label>Octaves</label> <input type="number" min=1 max=8 value=5 onchange="updateSetting('height_octaves', parseInt(this.value))"/>
       <br/>
-      <label>Octaves</label> <input type="number" min=1 max=8 value=5 onchange="updateSetting('height_octaves', parseInt(this.value))"/>
+      <label>Bias</label> <input type="number" min=-2 max=2 value=0 onchange="updateSetting('height_bias', parseFloat(this.value))"/>
       <br/>
       <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateRadius('height', parseFloat(this.value))"/>
       <br/>
@@ -111,6 +114,8 @@
       <label>Seed</label> <input type="text" onchange="changeSeed('heat', this.value)"/>
       <br/>
       <label>Octaves</label> <input type="number" min=1 max=8 value=5 onchange="updateSetting('heat_octaves', parseInt(this.value))"/>
+      <br/>
+      <label>Bias</label> <input type="number" min=-2 max=2 value=0 onchange="updateSetting('heat_bias', parseFloat(this.value))"/>
       <br/>
       <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateRadius('heat', parseFloat(this.value))"/>
       <br/>
@@ -131,6 +136,8 @@
       <label>Seed</label> <input type="text" onchange="changeSeed('humidity', this.value)"/>
       <br/>
       <label>Octaves</label> <input type="number" min=1 max=8 value=5 onchange="updateSetting('humidity_octaves', parseInt(this.value))"/>
+      <br/>
+      <label>Bias</label> <input type="number" min=-2 max=2 value=0 onchange="updateSetting('humidity_bias', parseFloat(this.value))"/>
       <br/>
       <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateRadius('humidity', parseFloat(this.value))"/>
       <br/>

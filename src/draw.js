@@ -47,10 +47,10 @@ function draw(canvas, gens, settings)
       let coord = GlobeNoise.pix_to_coord(x, y, settings.width, settings.height);
       let lat = coord.lat;
       let lon = coord.lon;
-      let height = gens.height.getValue(lat, lon, settings.height_octaves);
+      let height = gens.height.getValue(lat, lon, settings.height_octaves) + settings.height_bias;
       
       
-      let heat = gens.heat.getValue(lat, lon, settings.heat_octaves);
+      let heat = gens.heat.getValue(lat, lon, settings.heat_octaves) + settings.heat_bias;
       // 0 = at pole, 1 = at equator
       let distanceToPole = 1-(2/h)*Math.abs(y-h/2);
       // if in icecap range...  
@@ -66,7 +66,7 @@ function draw(canvas, gens, settings)
       }
       
       
-      let humidity = gens.humidity.getValue(lat, lon, settings.humidity_octaves);
+      let humidity = gens.humidity.getValue(lat, lon, settings.humidity_octaves) + settings.humidity_bias;
       
       let color = getColor(height, heat, humidity, settings);
       
