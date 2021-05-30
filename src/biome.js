@@ -11,7 +11,7 @@ var biome_key = [
   key_entry("#3075ca","Warm ocean"),
   
   key_entry("#a6a687","Gravel beach"),
-  key_entry("#f2e264","Sand beach"),
+  key_entry("#f4d0b3","Sand beach"),
   
   key_entry("#dddddd","In-land glacier"),
   key_entry("#8cccbd","Tundra"),
