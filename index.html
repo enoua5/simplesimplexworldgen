@@ -46,11 +46,11 @@
         humidity: new GlobeNoise()
       };
       var settings = {
-        height: 100,
+        height: 300,
         
-        height_octaves: 5,
-        heat_octaves: 5,
-        humidity_octaves: 5,
+        height_octaves: 8,
+        heat_octaves: 8,
+        humidity_octaves: 8,
         
         height_bias: 0,
         heat_bias: 0,
@@ -103,8 +103,6 @@
         }
       
         let canvas = document.getElementById("canvas");
-        canvas.height = settings.height;
-        canvas.width = settings.height * 2;
         
         // fill out the pals
         for(i of ["ocean", "beach", "plains", "mountains"])
@@ -133,26 +131,18 @@
         settings.heat_seed = refit(Math.random(), 0, 1, 0, 2**16, true, true);
         settings.humidity_seed = refit(Math.random(), 0, 1, 0, 2**16, true, true);
         
-        
+        resetInputs(settings);
         draw(canvas, gens, settings);
       }
       
       function redraw()
       {
         let canvas = document.getElementById("canvas");
-        canvas.height = settings.height;
-        canvas.width = settings.height * 2;
         
         draw(canvas, gens, settings);
       }
       
       // setting change handlers
-      function changeSize(height)
-      {
-        settings.height=parseInt(height)
-        settings.width = settings.height*2;
-      }
-      
       function changeSeed(which, text)
       {
         let value = 0;
@@ -173,6 +163,41 @@
         settings[which] = value;
       }
       
+      function resetInputs(settings)
+      {
+        for(i in settings)
+        {
+          if(i == "height")
+            continue;
+          try
+          {
+            document.getElementById("set_"+i).value = settings[i];
+          }
+          catch(e){}
+        }
+      }
+      
+      function export_json()
+      {
+        let box = document.getElementById("port_box");
+        box.value = JSON.stringify(settings_on_last_gen);
+      }
+      function import_json()
+      {
+        let json = document.getElementById("port_box").value;
+        let newSettings = JSON.parse(json);
+        
+        for(i in newSettings)
+        {
+          if(i == "height")
+            continue;
+          settings[i] = newSettings[i];
+        }
+        resetInputs(newSettings);
+        
+        draw(document.getElementById("canvas"), gens, settings)
+      }
+      
     </script>
   </head>
   <body onload="onload()">
@@ -191,11 +216,11 @@
     </div>
     
     
-    <label>Image height</label> <input type="number" min=5 max=1024 value=100 onchange="changeSize(this.value)"/>
+    <label>Image height</label> <input id="set_height" type="number" min=5 max=1024 value=300 onchange="updateSetting('height', parseInt(this.value))"/>
     <br/>
     <small>Image width is 2*image height. Work with a small image before increasing size for export.</small>
     <br/>
-    <label>Meridian</label> <input type="range" min="-3.14159" max="3.14159" value="0" step="0.001" onchange="updateSetting('rotation', parseFloat(this.value))"/> 
+    <label>Meridian</label> <input id="set_rotation" type="range" min="-3.14159" max="3.14159" value="0" step="0.001" onchange="updateSetting('rotation', parseFloat(this.value))"/> 
     <br/>
     <br/>
     
@@ -206,56 +231,65 @@
     <br/>
     
     <details>
+      <summary>Import/Export</summary>
+      <textarea id="port_box"></textarea>
+      <br/>
+      <button onclick="export_json()">Export</button>
+      <button onclick="import_json()">Import</button>
+    </details>
+    <br/>
+    
+    <details>
       <summary>Height settings</summary>
-      <label>Seed</label> <input type="text" onchange="changeSeed('height_seed', this.value)"/>
+      <label>Seed</label> <input id="set_height_seed" type="text" onchange="changeSeed('height_seed', this.value)"/>
       <br/>
-      <label>Octaves</label> <input type="number" min=1 max=8 value=5 onchange="updateSetting('height_octaves', parseInt(this.value))"/>
+      <label>Octaves</label> <input id="set_height_octaves" type="number" min=1 max=10 value=8 onchange="updateSetting('height_octaves', parseInt(this.value))"/>
       <br/>
-      <label>Bias</label> <input type="number" min=-2 max=2 value=0 step=0.05 onchange="updateSetting('height_bias', parseFloat(this.value))"/>
+      <label>Bias</label> <input id="set_height_bias" type="number" min=-2 max=2 value=0 step=0.05 onchange="updateSetting('height_bias', parseFloat(this.value))"/>
       <br/>
-      <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateSetting('height_radius', parseFloat(this.value))"/>
+      <label>Sampling radius</label> <input id="set_height_radius" type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateSetting('height_radius', parseFloat(this.value))"/>
       <br/>
       <small>Note: higher sampling radius creates smaller biomes, while smaller radius creates larger biomes</small>
       
       <br/>
-      <label>Sea level</label> <input type="range" min=-1 max=1 value=0 step=0.01 onchange="updateSetting('ocean_height', parseFloat(this.value))"/>
+      <label>Sea level</label> <input id="set_ocean_height" type="range" min=-1 max=1 value=0 step=0.01 onchange="updateSetting('ocean_height', parseFloat(this.value))"/>
       <br/>
-      <label>Beach length</label> <input type="range" min=0 max=0.25 value=0.01 step=0.001 onchange="updateSetting('beach_height', parseFloat(this.value))"/>
+      <label>Beach length</label> <input id="set_beach_height" type="range" min=0 max=0.25 value=0.01 step=0.001 onchange="updateSetting('beach_height', parseFloat(this.value))"/>
       <br/>
-      <label>Mountain base</label> <input type="range" min=-1 max=1 value=0.6 step=0.01 onchange="updateSetting('mountain_base', parseFloat(this.value))"/>
+      <label>Mountain base</label> <input id="set_mountain_base" type="range" min=-1 max=1 value=0.6 step=0.01 onchange="updateSetting('mountain_base', parseFloat(this.value))"/>
       
     </details>
     <br/>
     
     <details>
       <summary>Heat settings</summary>
-      <label>Seed</label> <input type="text" onchange="changeSeed('heat_seed', this.value)"/>
+      <label>Seed</label> <input id="set_heat_seed" type="text" onchange="changeSeed('heat_seed', this.value)"/>
       <br/>
-      <label>Octaves</label> <input type="number" min=1 max=8 value=5 onchange="updateSetting('heat_octaves', parseInt(this.value))"/>
+      <label>Octaves</label> <input id="set_heat_octaves" type="number" min=1 max=10 value=8 onchange="updateSetting('heat_octaves', parseInt(this.value))"/>
       <br/>
-      <label>Bias</label> <input type="number" min=-2 max=2 value=0 step=0.05 onchange="updateSetting('heat_bias', parseFloat(this.value))"/>
+      <label>Bias</label> <input id="set_heat_bias" type="number" min=-2 max=2 value=0 step=0.05 onchange="updateSetting('heat_bias', parseFloat(this.value))"/>
       <br/>
-      <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateSetting('heat_radius', parseFloat(this.value))"/>
+      <label>Sampling radius</label> <input id="set_heat_radius" type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateSetting('heat_radius', parseFloat(this.value))"/>
       <br/>
       <small>Note: higher sampling radius creates smaller biomes, while smaller radius creates larger biomes</small>
       <br/>
-      <label>Latitude heat difference</label> <input type="number" min=0 max=2 step=0.1 value=1 onchange="updateSetting('latHeat', parseFloat(this.value))"/>
+      <label>Latitude heat difference</label> <input id="set_latHeat" type="number" min=0 max=2 step=0.1 value=1 onchange="updateSetting('latHeat', parseFloat(this.value))"/>
       <br/>
-      <label>Mountain ice altitude</label> <input type="number" min=-2 max=2 step=0.1 value=0.5 onchange="updateSetting('iceAltitude', parseFloat(this.value))"/>
+      <label>Mountain ice altitude</label> <input id="set_iceAltitude" type="number" min=-2 max=2 step=0.1 value=0.5 onchange="updateSetting('iceAltitude', parseFloat(this.value))"/>
       <br/>
-      <label>Mountain ice strength</label> <input type="number" min=0 max=2 step=0.1 value=1 onchange="updateSetting('iceAltitudeStrength', parseFloat(this.value))"/>
+      <label>Mountain ice strength</label> <input id="set_iceAltitudeStrength" type="number" min=0 max=2 step=0.1 value=1 onchange="updateSetting('iceAltitudeStrength', parseFloat(this.value))"/>
     </details>
     <br/>
     
     <details>
       <summary>Humidity settings</summary>
-      <label>Seed</label> <input type="text" onchange="changeSeed('humidity_seed', this.value)"/>
+      <label>Seed</label> <input id="set_humidity_seed" type="text" onchange="changeSeed('humidity_seed', this.value)"/>
       <br/>
-      <label>Octaves</label> <input type="number" min=1 max=8 value=5 onchange="updateSetting('humidity_octaves', parseInt(this.value))"/>
+      <label>Octaves</label> <input id="set_humidity_octaves" type="number" min=1 max=10 value=8 onchange="updateSetting('humidity_octaves', parseInt(this.value))"/>
       <br/>
-      <label>Bias</label> <input type="number" min=-2 max=2 value=0 step=0.05 onchange="updateSetting('humidity_bias', parseFloat(this.value))"/>
+      <label>Bias</label> <input id="set_humidity_bias" type="number" min=-2 max=2 value=0 step=0.05 onchange="updateSetting('humidity_bias', parseFloat(this.value))"/>
       <br/>
-      <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateSetting('humidity_radius', parseFloat(this.value))"/>
+      <label>Sampling radius</label> <input id="set_humidity_radius" type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateSetting('humidity_radius', parseFloat(this.value))"/>
       <br/>
       <small>Note: higher sampling radius creates smaller biomes, while smaller radius creates larger biomes</small>
     </details>

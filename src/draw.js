@@ -86,7 +86,7 @@ function drawLine(ctx, frame, y, gens, settings)
   
   for(let x = 0; x < w; x++)
   {
-    let coord = GlobeNoise.pix_to_coord(x, y, settings.width, settings.height, settings.rotation);
+    let coord = GlobeNoise.pix_to_coord(x, y, settings.height*2, settings.height, settings.rotation);
     let hhh = get3h(coord, gens, settings);
     
     let color = getColor(hhh.height, hhh.heat, hhh.humidity, settings);
@@ -119,13 +119,15 @@ function draw(canvas, gens, settings)
   
   for(let i in settings) settings_on_last_gen[i] = settings[i];
   
+  
+  let h = settings.height;
+  let w = h*2;
+  canvas.height = h;
+  canvas.width = w;
+  
   let ctx = canvas.getContext('2d');
   
-  let h = canvas.height;
-  let w = canvas.width;
-  
   let newFrame = ctx.createImageData(w, h);
-  let i = 0;
   
   document.getElementById("submit_button").disabled = true;
   // each calls the next line using setTimout to avoid hangs
