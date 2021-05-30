@@ -114,8 +114,8 @@ function showData(e)
   let height_m = refit(hhh.height, -1, 1, -10000, 10000);
   let sealevel_m = refit(settings_on_last_gen.ocean_height, -1, 1, -10000, 10000);
   let m_above_sealevel = height_m - sealevel_m;
-  m_above_sealevel = Math.abs(m_above_sealevel);
   let toSea = m_above_sealevel < 0 ? "below" : "above";
+  m_above_sealevel = Math.abs(m_above_sealevel);
   let ft_above_sealevel = m_above_sealevel * 3.28084;
   
   let temp_c = refit(hhh.heat, -2, 1.2, -60, 40);
