@@ -3,7 +3,23 @@
   <head>
     <title></title>
     <style>
-    
+      .key_color
+      {
+        height: 1.5em;
+        width: 2em;
+        display: inline-block;
+        margin-right: 0.5em;
+      }
+      #key>p
+      {
+        display: inline-block;
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+      label
+      {
+        margin-right: 0.5em;
+      }
     </style>
     
     <script src="src/arrayND.js"></script>
@@ -11,6 +27,7 @@
     <script src="src/hash.js"></script>
     <script src="src/noise.js"></script>
     <script src="src/Simplex.class.js"></script>
+    <script src="src/biome.js"></script>
     <script src="src/draw.js"></script>
     
     <script>
@@ -52,6 +69,23 @@
     
       function onload()
       {
+        let key = document.getElementById("key");
+        for(b of biome_key)
+        {
+          let c = document.createElement("div");
+          c.style.background = b.color;
+          c.classList.add("key_color");
+          
+          key.appendChild(c);
+          
+          let name = document.createElement("p");
+          name.innerText = b.name;
+          
+          key.appendChild(name);
+          
+          key.appendChild(document.createElement("br"));
+        }
+      
         let canvas = document.getElementById("canvas");
         canvas.height = settings.height;
         canvas.width = settings.width;
@@ -91,8 +125,8 @@
         let canvas = document.getElementById("canvas");
         canvas.height = settings.height;
         canvas.width = settings.width;
-        document.getElementById("key").height = settings.height;
-        draw(canvas, gens, settings)
+        
+        draw(canvas, gens, settings);
       }
       
       // setting change handlers
@@ -123,7 +157,6 @@
     <canvas id="canvas">
       
     </canvas>
-    <img id="key" src="img/key.png" height=100/>
     
     
     <br/>
@@ -136,6 +169,12 @@
     <br/>
     <label>Meridian</label> <input type="range" min="-3.14159" max="3.14159" value="0" step="0.001" onchange="updateSetting('rotation', parseFloat(this.value))"/> 
     <br/>
+    <br/>
+    
+    <details id="key">
+      <summary>Key</summary>
+      
+    </details>
     <br/>
     
     <details>
