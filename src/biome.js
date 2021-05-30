@@ -111,17 +111,18 @@ function showData(e)
   prepGenerators(gens, settings_on_last_gen);
   let hhh = get3h(coord, gens, settings_on_last_gen);
 
-  let height_m = refit(hhh.height, -1, 1, -10000, 10000);
+  let height_m = refit(hhh.height, -1, 1, -7000, 7000);
   let sealevel_m = refit(settings_on_last_gen.ocean_height, -1, 1, -10000, 10000);
   let m_above_sealevel = height_m - sealevel_m;
   let toSea = m_above_sealevel < 0 ? "below" : "above";
   m_above_sealevel = Math.abs(m_above_sealevel);
   let ft_above_sealevel = m_above_sealevel * 3.28084;
   
-  let temp_c = refit(hhh.heat, -2, 1.2, -60, 40);
+  let temp_c = refit(hhh.heat, -1, 1, -20, 40);
   let temp_f = (temp_c * 9/5) + 32;
   
-  let rainfall_mm = refit(hhh.humidity, -0.2, 1, 1, 3000, true);
+  let rainfall_mm = refit(hhh.humidity, -1, 1, -500, 2500);
+  rainfall_mm = Math.max(rainfall_mm, 0);
   let rainfall_in = rainfall_mm * 0.0393701;
   
   document.getElementById("height").innerText = `${m_above_sealevel.toFixed(0)} m (${ft_above_sealevel.toFixed(0)}') ${toSea} sea level`;
