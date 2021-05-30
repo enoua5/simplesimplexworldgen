@@ -19,7 +19,7 @@ class GlobeNoise
   {
     // this shouldn't be correct, but aparantly it is?? 
     return {
-      lon: refit(x/2, 0, w/2, -Math.PI, Math.PI) - settings.rotation,
+      lon: refit(x/2, 0, w/2, -Math.PI, Math.PI) - r,
       lat: refit(y/2, -h/2, h/2, -Math.PI, Math.PI)
     };
   }

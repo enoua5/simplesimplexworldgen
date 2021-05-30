@@ -46,6 +46,17 @@ function getColor(height, heat, humidity, settings)
 //  return {red: heat, green: height, blue: humidity};
 }
 
+function prepGenerators(gens, settings)
+{
+  gens.height.generator.seed =  settings.height_seed;
+  gens.heat.generator.seed = settings.heat_seed;
+  gens.humidity.generator.seed = settings.humidity_seed;
+  
+  gens.height.radius =  settings.height_radius;
+  gens.heat.radius = settings.heat_radius;
+  gens.humidity.radius = settings.humidity_radius;
+}
+
 function get3h(coords, gens, settings) // 3h = Height, Heat, Humidity
 {
   let lat = coords.lat;
@@ -75,7 +86,7 @@ function drawLine(ctx, frame, y, gens, settings)
   
   for(let x = 0; x < w; x++)
   {
-    let coord = GlobeNoise.pix_to_coord(x, y, settings.width, settings.height);
+    let coord = GlobeNoise.pix_to_coord(x, y, settings.width, settings.height, settings.rotation);
     let hhh = get3h(coord, gens, settings);
     
     let color = getColor(hhh.height, hhh.heat, hhh.humidity, settings);
@@ -104,6 +115,10 @@ function drawLine(ctx, frame, y, gens, settings)
 
 function draw(canvas, gens, settings)
 {
+  prepGenerators(gens, settings);
+  
+  for(let i in settings) settings_on_last_gen[i] = settings[i];
+  
   let ctx = canvas.getContext('2d');
   
   let h = canvas.height;

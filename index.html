@@ -16,6 +16,11 @@
         margin-top: 0;
         margin-bottom: 0;
       }
+      #data>p
+      {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
       label
       {
         margin-right: 0.5em;
@@ -41,14 +46,24 @@
         humidity: new GlobeNoise()
       };
       var settings = {
-        width: 200,
         height: 100,
+        
         height_octaves: 5,
         heat_octaves: 5,
         humidity_octaves: 5,
+        
         height_bias: 0,
         heat_bias: 0,
         humidity_bias: 0,
+        
+        height_seed: 0,
+        heat_seed: 0,
+        humidity_seed: 0,
+        
+        height_radius: 1,
+        heat_radius: 1,
+        humidity_radius: 1,
+        
         latHeat: 1,
         iceAltitude: 0.5,
         iceAltitudeStrength: 0.5,
@@ -59,6 +74,7 @@
         
         rotation: 0
       };
+      var settings_on_last_gen = {};
       
       var pals = {
         ocean: createNDArray([256, 256]),
@@ -88,7 +104,7 @@
       
         let canvas = document.getElementById("canvas");
         canvas.height = settings.height;
-        canvas.width = settings.width;
+        canvas.width = settings.height * 2;
         
         // fill out the pals
         for(i of ["ocean", "beach", "plains", "mountains"])
@@ -113,9 +129,10 @@
           
         }
         
-        gens.height.generator.seed = refit(Math.random(), 0, 1, 0, 2**16, true, true);
-        gens.heat.generator.seed = refit(Math.random(), 0, 1, 0, 2**16, true, true);
-        gens.humidity.generator.seed = refit(Math.random(), 0, 1, 0, 2**16, true, true);
+        settings.height_seed = refit(Math.random(), 0, 1, 0, 2**16, true, true);
+        settings.heat_seed = refit(Math.random(), 0, 1, 0, 2**16, true, true);
+        settings.humidity_seed = refit(Math.random(), 0, 1, 0, 2**16, true, true);
+        
         
         draw(canvas, gens, settings);
       }
@@ -124,7 +141,7 @@
       {
         let canvas = document.getElementById("canvas");
         canvas.height = settings.height;
-        canvas.width = settings.width;
+        canvas.width = settings.height * 2;
         
         draw(canvas, gens, settings);
       }
@@ -138,8 +155,17 @@
       
       function changeSeed(which, text)
       {
-        let generator = gens[which].generator;
-        generator.seed = text.hashCode();
+        let value = 0;
+        if(text.match(/^-?\d*$/))
+        {
+          value = parseInt(text);
+        }
+        else
+        {
+          value = text.hashCode();
+        }
+        
+        settings[which] = value;
       }
       
       function updateSetting(which, value)
@@ -147,21 +173,23 @@
         settings[which] = value;
       }
       
-      function updateRadius(which, value)
-      {
-        gens[which].radius = value;
-      }
     </script>
   </head>
   <body onload="onload()">
-    <canvas id="canvas">
+    <canvas id="canvas" onmousemove="showData(event)" onmouseout="clearData()">
       
     </canvas>
-    
-    
     <br/>
     <button id="submit_button" onclick="redraw()">Redraw</button>
     <br/>
+    <div id="data">
+      <p id="location"></p>
+      <p id="biome"></p>
+      <p id="height"></p> 
+      <p id="heat"></p> 
+      <p id="humidity"></p> 
+    </div>
+    
     
     <label>Image height</label> <input type="number" min=5 max=1024 value=100 onchange="changeSize(this.value)"/>
     <br/>
@@ -179,13 +207,13 @@
     
     <details>
       <summary>Height settings</summary>
-      <label>Seed</label> <input type="text" onchange="changeSeed('height', this.value)"/>
+      <label>Seed</label> <input type="text" onchange="changeSeed('height_seed', this.value)"/>
       <br/>
       <label>Octaves</label> <input type="number" min=1 max=8 value=5 onchange="updateSetting('height_octaves', parseInt(this.value))"/>
       <br/>
       <label>Bias</label> <input type="number" min=-2 max=2 value=0 step=0.05 onchange="updateSetting('height_bias', parseFloat(this.value))"/>
       <br/>
-      <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateRadius('height', parseFloat(this.value))"/>
+      <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateSetting('height_radius', parseFloat(this.value))"/>
       <br/>
       <small>Note: higher sampling radius creates smaller biomes, while smaller radius creates larger biomes</small>
       
@@ -201,13 +229,13 @@
     
     <details>
       <summary>Heat settings</summary>
-      <label>Seed</label> <input type="text" onchange="changeSeed('heat', this.value)"/>
+      <label>Seed</label> <input type="text" onchange="changeSeed('heat_seed', this.value)"/>
       <br/>
       <label>Octaves</label> <input type="number" min=1 max=8 value=5 onchange="updateSetting('heat_octaves', parseInt(this.value))"/>
       <br/>
       <label>Bias</label> <input type="number" min=-2 max=2 value=0 step=0.05 onchange="updateSetting('heat_bias', parseFloat(this.value))"/>
       <br/>
-      <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateRadius('heat', parseFloat(this.value))"/>
+      <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateSetting('heat_radius', parseFloat(this.value))"/>
       <br/>
       <small>Note: higher sampling radius creates smaller biomes, while smaller radius creates larger biomes</small>
       <br/>
@@ -221,13 +249,13 @@
     
     <details>
       <summary>Humidity settings</summary>
-      <label>Seed</label> <input type="text" onchange="changeSeed('humidity', this.value)"/>
+      <label>Seed</label> <input type="text" onchange="changeSeed('humidity_seed', this.value)"/>
       <br/>
       <label>Octaves</label> <input type="number" min=1 max=8 value=5 onchange="updateSetting('humidity_octaves', parseInt(this.value))"/>
       <br/>
       <label>Bias</label> <input type="number" min=-2 max=2 value=0 step=0.05 onchange="updateSetting('humidity_bias', parseFloat(this.value))"/>
       <br/>
-      <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateRadius('humidity', parseFloat(this.value))"/>
+      <label>Sampling radius</label> <input type="number" min=0.1 max=20 step=0.1 value=1 onchange="updateSetting('humidity_radius', parseFloat(this.value))"/>
       <br/>
       <small>Note: higher sampling radius creates smaller biomes, while smaller radius creates larger biomes</small>
     </details>
