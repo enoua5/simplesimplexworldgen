@@ -16,7 +16,7 @@ var biome_key = [
   key_entry("#dddddd","In-land glacier"),
   key_entry("#8cccbd","Tundra"),
   key_entry("#00574e","Taiga"),
-  key_entry("#c3d88b","Semifrozen grasslands"),
+  key_entry("#c3d88b","Cold grasslands"),
   key_entry("#00714e","Subtemprate forest"),
   
   
