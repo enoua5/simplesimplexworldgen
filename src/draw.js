@@ -71,7 +71,8 @@ function get3h(coords, gens, settings) // 3h = Height, Heat, Humidity
   
   if(height > settings.iceAltitude)
   {
-    heat -= settings.iceAltitudeStrength;
+    let adjustment = refit(height, settings.iceAltitude, 1, 0, settings.iceAltitudeStrength);
+    heat -= adjustment;
   }
   
   let humidity = gens.humidity.getValue(lat, lon, settings.humidity_octaves) + settings.humidity_bias;
