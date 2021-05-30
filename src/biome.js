@@ -118,7 +118,13 @@ function showData(e)
   m_above_sealevel = Math.abs(m_above_sealevel);
   let ft_above_sealevel = m_above_sealevel * 3.28084;
   
-  let temp_c = refit(hhh.heat, -1, 1, -20, 40);
+  let adjusted_heat = hhh.heat
+  if(hhh.heat < -1)
+  {
+    let outside_range = hhh.heat + 1;
+    adjusted_heat += outside_range * 2;
+  }
+  let temp_c = refit(adjusted_heat, -1, 1, -20, 40);
   let temp_f = (temp_c * 9/5) + 32;
   
   let rainfall_mm = refit(hhh.humidity, -1, 1, -500, 2500);
