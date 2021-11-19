@@ -33,7 +33,7 @@ class Simplex
     let total=0;
     for(let i=0; i<octaves; i++)
     {
-      total+=(2**-i)*noise.perlin3((xp/this.stretch.x)+0.1, (yp/this.stretch.y)+0.1, (zp/this.stretch.z)+0.1);
+      total+=(2**-i)*noise.simplex3((xp/this.stretch.x)+0.1, (yp/this.stretch.y)+0.1, (zp/this.stretch.z)+0.1);
       
       xp*=2;
       yp*=2;
