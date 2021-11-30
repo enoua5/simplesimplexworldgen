@@ -20,6 +20,14 @@ function refit(value, srcMin, srcMax, outMin, outMax, clamp = false, round = fal
   return ret;
 }
 
+function getRawColor(height, heat, humidity, settings)
+{
+  let green = refit(height, -1, 1, 0, 255, true, true);
+  let red = refit(heat, -1, 1, 0, 255, true, true);
+  let blue = refit(humidity, -1, 1, 0, 255, true, true);
+  return {red, green, blue};
+}
+
 function getColor(height, heat, humidity, settings)
 {
   let ctx = colorPicker.getContext('2d');
@@ -90,7 +98,11 @@ function drawLine(ctx, frame, y, gens, settings)
     let coord = GlobeNoise.pix_to_coord(x, y, settings.height*2, settings.height, settings.rotation);
     let hhh = get3h(coord, gens, settings);
     
-    let color = getColor(hhh.height, hhh.heat, hhh.humidity, settings);
+    let color;
+    if(settings.draw_biomes)
+      color = getColor(hhh.height, hhh.heat, hhh.humidity, settings);
+    else
+      color = getRawColor(hhh.height, hhh.heat, hhh.humidity, settings);
     
     frame.data[i++] = color.red;
     frame.data[i++] = color.green;

@@ -92,7 +92,9 @@
         beach_height: 0.1,
         mountain_base: 0.75,
         
-        rotation: 0
+        rotation: 0,
+
+        draw_biomes: 1,
       };
       var settings_on_last_gen = {};
       
@@ -226,6 +228,9 @@
     </canvas>
     <br/>
     <button id="submit_button" onclick="redraw()">Redraw</button>
+    <input id="biome_map" checked type="checkbox" onchange="updateSetting('draw_biomes', this.checked)"/>
+    <label for="biome_map" style="user-select: none;">Draw biomes</label>
+
     <br/>
     <div id="data">
       <p id="location"></p>
